@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import OlaMapComponent from "./OlaMapComponent";
+import VehicleFilter from "./VehicleFilter";
+import HeaderNavbar from "./HeaderNavbar";
+import LandingPage from "./LandingPage";
+import "./css/LandingPage.css";
+import ParkingBooking from "./ParkingBooking";
+import RegistrationForm from "./RegistrationForm";
+import SignInSignUp from "./SignInSignUp";
+import OtpVerification from "./otp/OtpVerification"; // ✅ Import added
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/signup" element={<SignInSignUp />} />
+        <Route path="/register" element={<RegistrationForm />} />
+        <Route path="/home" element={<><HeaderNavbar /><VehicleFilter /><OlaMapComponent /></>} />
+        <Route path="/parkingbooking" element={<ParkingBooking />} />
+        <Route path="/verify-otp" element={<OtpVerification />} /> 
+      </Routes>
+    </Router>
   );
 }
 

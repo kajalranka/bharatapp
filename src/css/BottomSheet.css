@@ -1,0 +1,121 @@
+/* Bottom Sheet Container */
+.bottom-sheet-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+  border-radius: 15px 15px 0 0;
+  overflow: hidden;
+}
+
+/* Drag Handle */
+.drag-handle {
+  width: 50px;
+  height: 5px;
+  background: #ccc;
+  border-radius: 10px;
+  margin: 10px auto;
+  cursor: pointer;
+}
+
+/* Content - Image and Details Side by Side */
+.content-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+}
+
+/* Image Container - Left */
+.image-container {
+  flex: 1; /* 50% width */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+  background: #f9f9f9;
+}
+
+.image-container img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 10px;
+}
+
+.placeholder-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #888;
+}
+
+/* Details Container - Right */
+.details-container {
+  flex: 1; /* 50% width */
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.details-container h1 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.details-container p {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+/* Pricing Section */
+.pricing-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.pricing-list li {
+  font-size: 16px;
+  margin: 3px 0;
+}
+
+/* ✅ Book Button at the Bottom */
+.button-container {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  border-top: 1px solid #ddd;
+}
+
+.book-button {
+  width: 95%;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.book-button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content-container {
+    flex-direction: column; /* Stack image and details on small screens */
+  }
+
+  .image-container, .details-container {
+    flex: none;
+    width: 100%;
+  }
+}

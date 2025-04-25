@@ -1,0 +1,129 @@
+/* Center the registration form */
+.registration-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full height of the viewport */
+  background: linear-gradient(70deg, #03a7ff, #ffffff); /* Gradient background */
+}
+
+/* Main container for the form */
+.registration-container {
+  display: flex;
+  width: 850px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Left Section Styling */
+.left-section {
+  width: 50%;
+  background: white;
+  padding: 30px;
+}
+
+.left-section h2 {
+  color: #03a7ff;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Right Section Styling */
+.right-section {
+  width: 50%;
+  background: #03a7ff; /* Keep the original background */
+  padding: 30px;
+  color: white; /* Changed text color to white */
+}
+
+.right-section h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: white; /* Ensure headings are white */
+}
+
+/* Input Fields */
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  padding: 8px;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: rgb(0, 0, 0); /* Default input text color */
+}
+
+/* Adjust input color for dark background */
+.right-section .input-group input,
+.right-section .input-group select {
+  color: white; /* Keep input text color white */
+  border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+}
+
+/* File input styling */
+.input-group input[type="file"] {
+  padding: 0; /* Remove padding for file input */
+}
+
+/* Flexbox for side-by-side inputs */
+.flex-container {
+  display: flex;
+  gap: 15px;
+}
+
+.flex-container .input-group {
+  width: 50%;
+}
+
+/* Checkbox Styling */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: white; /* Ensure checkbox text is white */
+}
+
+.checkbox-group input {
+  width: 16px;
+  height: 16px;
+}
+
+.checkbox-group a {
+  color: #a5d8ff;
+  text-decoration: none;
+}
+
+.checkbox-group a:hover {
+  text-decoration: underline;
+}
+
+/* Register Button */
+#Button1,
+#Button2 {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background: white;
+  color: #4a3d8f;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #e0e0e0;
+}

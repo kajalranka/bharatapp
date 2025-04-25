@@ -1,0 +1,48 @@
+.HeaderNavBar{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #ffffff;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    height: 80px;
+    justify-content: space-between;
+    padding: 4px;
+  }
+  .NavBar{
+    display: flex;
+    gap: 16px; 
+    padding: 6px;
+    align-items: center;
+  }
+  svg{
+    transform: translatex(50%);
+    position: absolute;
+    height: 20px;
+    left: 635px;
+  }
+  input{
+    width: 100%;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 25px; /* Adjust the value for desired roundness */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Adds subtle shadow for depth */
+    font-size: 16px;
+    transition: box-shadow 0.3s ease;
+    background-color: rgb(248, 248, 248);
+  }
+  input:focus {
+    outline: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Enhanced shadow on focus */
+  }
+  
+  .SearchBar{
+    position: relative;
+    padding: 6px;
+    gap: 2px;
+    width: 40%;
+    height: 40%;
+    display: flex;
+    align-items: center;
+  }

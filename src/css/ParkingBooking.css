@@ -1,0 +1,289 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+* {
+    box-sizing: border-box;
+  }
+  
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 90%;
+  padding: 20px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+.subheader {
+  color: #666;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.image-placeholder {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9f9f9;
+  margin: 15px 0;
+  color: #999;
+  font-size: 14px;
+}
+
+.time-display {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.date-display {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Slot Type Section */
+.slot-type {
+  margin: 20px 0;
+}
+
+.slot-type .header {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  grid-template-rows: repeat(2, auto); /* 2 rows */
+  gap: 12px;
+  justify-content: center;
+}
+
+.slot-button {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+.slot-button .icon {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.slot-button .label {
+  font-weight: bold;
+  color: #333;
+}
+
+.slot-button .price {
+  font-size: 14px;
+  color: #007bff;
+}
+
+.slot-button .size {
+  font-size: 12px;
+  color: #777;
+}
+
+.slot-button:hover {
+  background: #f9f9f9;
+  transform: scale(1.05);
+}
+
+.slot-button.selected {
+  border-color: #ffcc00;
+  background: #fffae5;
+  transform: scale(1.05);
+}
+
+/* Input Fields */
+.input-group {
+  margin: 12px 0;
+  position: relative;
+}
+
+.input-group .header {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 40px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.input-icon {
+  position: absolute;
+  color: #555;
+  font-size: 16px;
+}
+
+.input-icon.left {
+  left: 12px;
+}
+
+.input-icon.right {
+  right: 12px;
+}
+
+/* Summary */
+.summary {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Booking Button */
+.book-button {
+  width: 100%;
+  background: #007bff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.book-button:hover {
+  background: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .container {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .slot-button {
+    padding: 10px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .book-button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Make sure this is higher than other elements */
+}
+
+.popup-container {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  color: rgb(138, 138, 138) !important;
+  z-index: 9999 !important;
+  border: 2px solid white;
+  font-size: 20px;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 20;
+}
+
+
+.close-button:hover {
+  color: black;
+  transform: scale(1.2);
+}
+

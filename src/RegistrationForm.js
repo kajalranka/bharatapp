@@ -78,11 +78,11 @@ const RegistrationForm = () => {
     try {
       // 🔥 Generate Full Address
       const fullAddress = `${formData.BuildinName}, ${formData.street}, ${formData.place}, ${formData.zipCode}`;
-      console.log("📌 Full Address for Geocoding:", fullAddress);
+      console.log("Full Address for Geocoding:", fullAddress);
 
       // 🔥 Get Coordinates from Address
       const coordinates = await getGeocode(fullAddress);
-      console.log("📌 Geocode API Response:", coordinates);
+      console.log("Geocode API Response:", coordinates);
 
       if (!coordinates || !coordinates.lat || !coordinates.lng) {
         alert("Failed to get valid location coordinates. Please check the address.");
@@ -95,7 +95,7 @@ const RegistrationForm = () => {
         ...formData,
         fullName: `${formData.firstName} ${formData.lastName}`,
         address: fullAddress,
-        latitude: coordinates.lat, // ✅ Ensure correct key names
+        latitude: coordinates.lat, // Ensure correct key names
         longitude: coordinates.lng,
         parkingId,
         status: "Available",
@@ -107,10 +107,10 @@ const RegistrationForm = () => {
       // 🔥 Store in Firestore
       await addDoc(collection(db, "owners"), finalData);
 
-      alert("✅ Registration successful!");
+      alert("Registration successful!");
       navigate("/home");
     } catch (error) {
-      console.error("🔥 Firestore Error:", error);
+      console.error("Firestore Error:", error);
       alert(`Failed to register. ${error.message}`);
     } finally {
       setLoading(false);

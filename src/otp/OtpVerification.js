@@ -60,7 +60,7 @@ const VerifyEmail = () => {
               localStorage.setItem('user', JSON.stringify(userData));
               
               alert("Email verification successful! You can now use all features.");
-              navigate('/home');
+              navigate('/register');
             }
           }
         });

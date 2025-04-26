@@ -75,12 +75,12 @@ const ParkingBooking = ({ isOpen, onClose }) => {
           <div className="header">Select Slot Type</div>
           <div className="grid">
             {[
-              { id: 1, icon: faCar, label: 'Micro', price: '$10/hr', size: 'Small' },
-              { id: 2, icon: faShuttleVan, label: 'Mini', price: '$15/hr', size: 'Standard' },
-              { id: 3, icon: faBicycle, label: 'Large', price: '$5/hr', size: 'Large' },
-              { id: 4, icon: faBus, label: 'Bike', price: '$20/hr', size: 'Bike' },
-              { id: 5, icon: faBus, label: 'Auto', price: '$20/hr', size: 'Auto' },
-              { id: 6, icon: faBus, label: 'Bus', price: '$20/hr', size: 'Bus' },
+              { id: 1, icon: faCar, label: 'Micro', price: '₹10/hr', size: 'Small' },
+              { id: 2, icon: faShuttleVan, label: 'Mini', price: '₹15/hr', size: 'Standard' },
+              { id: 3, icon: faBicycle, label: 'Large', price: '₹5/hr', size: 'Large' },
+              { id: 4, icon: faBus, label: 'Bike', price: '₹20/hr', size: 'Bike' },
+              { id: 5, icon: faBus, label: 'Auto', price: '₹20/hr', size: 'Auto' },
+              { id: 6, icon: faBus, label: 'Bus', price: '₹20/hr', size: 'Bus' },
             ].map(slot => (
               <button
                 key={slot.id}
@@ -131,11 +131,11 @@ const ParkingBooking = ({ isOpen, onClose }) => {
         <div className="summary">
           <div className="summary-item">
             <div className="header">Parking</div>
-            <div className="amount">-$27</div>
+            <div className="amount">-₹27</div>
           </div>
           <div className="summary-item">
             <div className="header">Total</div>
-            <div className="amount">-$27</div>
+            <div className="amount">-₹27</div>
           </div>
         </div>
 

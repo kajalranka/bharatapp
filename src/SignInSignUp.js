@@ -1,11 +1,9 @@
-
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
 import { sendEmailVerification } from "firebase/auth";
 
-
+ 
 const SignInSignUp = () => {
   const navigate = useNavigate();
   const [signUpError, setSignUpError] = useState("");
@@ -42,6 +40,7 @@ const SignInSignUp = () => {
     const email = e.target[1].value;
     const phone = e.target[2].value;
     const password = e.target[3].value;
+
 
     try {
       // Load Firebase modules

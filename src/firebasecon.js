@@ -1,8 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore"; 
 import { getStorage } from "firebase/storage"; // Import Firebase Storage
-import { getAnalytics } from "firebase/analytics";
-import { getAuth, RecaptchaVerifier ,signInWithPhoneNumber} from "firebase/auth"; // ✅ Import getAuth
+// import { getAnalytics } from "firebase/analytics";
+import { getAuth, RecaptchaVerifier ,signInWithPhoneNumber} from "firebase/auth"; //Import getAuth
 
 const firebaseConfig = {
   apiKey: "AIzaSyCy2MIi5ZKXeQvaZIWuE0JZpkuBqRweuEk",

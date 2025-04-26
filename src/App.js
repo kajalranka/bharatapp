@@ -19,7 +19,7 @@ function App() {
         <Route path="/register" element={<RegistrationForm />} />
         <Route path="/home" element={<><HeaderNavbar /><VehicleFilter /><OlaMapComponent /></>} />
         <Route path="/parkingbooking" element={<ParkingBooking />} />
-        <Route path="/verify-otp" element={<OtpVerification />} /> 
+        <Route path="/verify-email" element={<OtpVerification />} /> 
       </Routes>
     </Router>
   );

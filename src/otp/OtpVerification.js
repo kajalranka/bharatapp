@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './OtpVerification.css'; // You'll need to create this CSS file
+import './OtpVerification.css'; 
 
 const VerifyEmail = () => {
   const [loading, setLoading] = useState(false);
@@ -28,7 +28,7 @@ const VerifyEmail = () => {
         const { initializeApp } = await import('firebase/app');
         const { getAuth, onAuthStateChanged, reload } = await import('firebase/auth');
         const { getFirestore, doc, updateDoc } = await import('firebase/firestore');
-        const firebaseConfig = (await import('./firebasecon')).default;
+        const firebaseConfig = (await import('../firebasecon')).default;
         
         // Initialize Firebase
         let app;
@@ -105,7 +105,7 @@ const VerifyEmail = () => {
       // Load Firebase modules
       const { initializeApp } = await import('firebase/app');
       const { getAuth, sendEmailVerification } = await import('firebase/auth');
-      const firebaseConfig = (await import('./firebasecon')).default;
+      const firebaseConfig = (await import('../firebasecon')).default;
       
       // Initialize Firebase
       let app;
@@ -153,7 +153,7 @@ const VerifyEmail = () => {
       // Load Firebase modules
       const { initializeApp } = await import('firebase/app');
       const { getAuth, reload } = await import('firebase/auth');
-      const firebaseConfig = (await import('./firebasecon')).default;
+      const firebaseConfig = (await import('../firebasecon')).default;
       
       // Initialize Firebase
       let app;
@@ -226,7 +226,7 @@ const VerifyEmail = () => {
           </button>
         </div>
         
-        <button className="back-to-signin" onClick={() => navigate('/')}>
+        <button className="back-to-signin" onClick={() => navigate('/signup')}>
           Back to Sign In
         </button>
       </div>

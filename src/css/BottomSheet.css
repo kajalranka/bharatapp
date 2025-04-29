@@ -92,7 +92,7 @@
   border-top: 1px solid #ddd;
 }
 
-.book-button {
+.book-button1 {
   width: 95%;
   background-color: #007bff;
   color: white;
@@ -104,7 +104,7 @@
   transition: 0.3s;
 }
 
-.book-button:hover {
+.book-button1:hover {
   background-color: #0056b3;
 }
 

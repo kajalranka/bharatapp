@@ -140,7 +140,7 @@ const ParkingBooking = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        <button onClick={handlePayment()} className="book-button1">Book now</button>
+        <button onClick={handlePayment} className="book-button">Book now</button>
       </div>
     </div>,
     document.body

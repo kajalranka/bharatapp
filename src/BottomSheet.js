@@ -92,7 +92,7 @@ const BottomSheet = ({ selectedMarker }) => {
 
       {/* ✅ Book Button - Full Width at the Bottom */}
       <div className="button-container">
-        <button className="book-button" onClick={() => setIsPopupOpen(true)}>
+        <button className="book-button1" onClick={() => setIsPopupOpen(true)}>
           Book Parking
         </button>
         <ParkingBooking isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />

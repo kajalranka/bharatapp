@@ -102,7 +102,7 @@ const RegistrationForm = () => {
         timestamp: new Date(),
       };
 
-      console.log("🚀 Submitting Data to Firestore:", finalData); // Debugging Log
+      console.log("Submitting Data to Firestore:", finalData); // Debugging Log
 
       // 🔥 Store in Firestore
       await addDoc(collection(db, "owners"), finalData);

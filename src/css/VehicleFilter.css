@@ -8,7 +8,7 @@
 /* Toggle Button */
 .sidebar-toggle-button {
   position: fixed;
-  top: 1rem;
+  top: 6rem;
   left: 1rem;
   z-index: 1001;
   background-color: #4299e1; /* Blue-500 */
@@ -46,7 +46,7 @@
 /* Sidebar */
 .sidebar {
   position: fixed;
-  top: 0;
+  top:80px;
   left: 0;
   height: 100vh;
   width: 28%;

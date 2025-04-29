@@ -1,58 +1,56 @@
-export const handlePayment = async () => {
-  const loadScript = (src) => {
-    return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  };
 
-  const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+// Function to dynamically load Razorpay SDK script
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+
+    script.onload = () => {
+      resolve(true);
+    };
+
+    script.onerror = () => {
+      resolve(false);
+    };
+
+    document.body.appendChild(script);
+  });
+};
+
+// Main function to handle payment
+export const handlePayment = async () => {
+  const res = await loadRazorpayScript();
+
   if (!res) {
     alert("Razorpay SDK failed to load. Are you online?");
     return;
   }
 
-  try {
-    const response = await fetch("http://localhost:5000/create-order", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  const options = {
+    key: "rzp_test_grMytIcY5TuC0o",  // 👉 Replace with your real Razorpay Key ID
+    amount: 2700,                 // 👉 Amount in paise (₹27.00)
+    currency: "INR",
+    name: "Parking Booking",
+    description: "Booking Payment for Garage 1",
+    image: "https://yourdomain.com/logo.png", // Optional - add your logo URL if you want
+    handler: function (response) {
+      alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
+      console.log("Payment Success", response);
+    },
+    prefill: {
+      name: "Your Name",             // Optional - can fill user's name
+      email: "youremail@example.com", // Optional - fill user's email
+      contact: "9999999999",          // Optional - fill user's contact
+    },
+    notes: {
+      address: "Parking Garage Address",
+    },
+    theme: {
+      color: "#0e76a8", // Theme color of the payment window
+    },
+  };
 
-    const orderData = await response.json();
-    if (!orderData.id) {
-      alert("Failed to create order. Try again.");
-      return;
-    }
-
-    const options = {
-      key: "rzp_test_grMytIcY5TuC0o",
-      amount: orderData.amount,
-      currency: "INR",
-      name: "Your Company",
-      description: "Test Transaction",
-      order_id: orderData.id,
-      handler: function (response) {
-        alert(`Payment successful! Payment ID: ${response.razorpay_payment_id}`);
-      },
-      prefill: {
-        name: "Test User",
-        email: "testuser@example.com",
-        contact: "9999999999",
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
-
-    const paymentObject = new window.Razorpay(options);
-    paymentObject.open();
-  } catch (error) {
-    console.error("Error during payment: ", error);
-    alert("Something went wrong. Please try again.");
-  }
+  const paymentObject = new window.Razorpay(options);
+  paymentObject.open();
 };
+

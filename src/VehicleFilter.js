@@ -2,9 +2,7 @@ import { useState } from "react";
 import { Menu, X, Search } from "lucide-react";
 import "./css/VehicleFilter.css";
 
-
-
-export default function VehicleFilter() {
+export default function VehicleFilter({onSearch}){
   const [isOpen, setIsOpen] = useState(true);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [parkingType, setParkingType] = useState("public");
@@ -18,7 +16,23 @@ export default function VehicleFilter() {
     handicap: false,
   });
   const [timeFilter, setTimeFilter] = useState("hourly");
-
+  
+  const handleSubmit= ()=> {
+    const filters = {
+      selectedVehicle,
+      parkingType,
+      searchPlace,
+      priceRange,
+      maxDistance,
+      availability,
+      amenities,
+      timeFilter,
+    };
+    // Pass filters up to the parent or context 
+ if (onSearch)
+   onSearch(filters);
+  };
+  
   return (
     <div className="sidebar-container">
       {/* Toggle Button */}
@@ -139,9 +153,17 @@ export default function VehicleFilter() {
               onChange={(e) => setTimeFilter(e.target.value)}
             >
               <option value="hourly">Hourly</option>
-              <option value="daily">Daily</option>
-              <option value="monthly">Monthly</option>
+              <option value="daily">Daily</option> 
+
+              <option value="monthly">Monthly</option> 
             </select>
+<button
+  className="sidebar-search-button"
+   onClick= {handleSubmit}
+  // style={{ marginTop:"0rem",padding: "25px", backgroundColor: "black", color: "white", borderRadius: "5px", width: "100%" }}
+  >
+  Search
+</button>
           </div>
         </div>
       </div>

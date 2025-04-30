@@ -10,8 +10,9 @@ import RouteFinder from "./RouteFinder";
 import BottomSheet from "./BottomSheet";
 import availableIcon from './green-marker.png';
 import HeaderNavbar from "./HeaderNavbar";
+import { handlePayment } from "./Razorpay/PaymentButton";
 
-const OlaMapComponent = () => {
+const OlaMapComponent = ({filters})=> {
   const { userLocation, error } = useUserLocation(); // Get user location
   const [olaMaps, setOlaMaps] = useState(null);
   const [mapInstance, setMapInstance] = useState(null);
@@ -75,6 +76,23 @@ const OlaMapComponent = () => {
           id: doc.id,
           ...doc.data(),
         }));
+    
+        const filteredSpots = fetchedSpots.filter((spot) => {
+          if (!filters) return true;
+
+          if (filters.searchPlace && !spot.location?.toLowerCase().includes(filters.searchPlace.toLowerCase())) return false;
+          if (filters.priceRange && Number(spot.price) > Number(filters.priceRange)) return false;
+          if (filters.availability && spot.status !== "Available") return false;
+          if (filters.parkingType && filters.parkingType !== "both" && spot.parkingType !== filters.parkingType) return false;
+          if (filters.selectedVehicle && spot.vehicleType !== filters.selectedVehicle) return false;
+          if (filters.timeFilter && spot.timeBasis !== filters.timeFilter) return false;
+          if (filters.amenities?.evCharging && !spot.evCharging) return false;
+          if (filters.amenities?.covered && !spot.covered) return false;
+          if (filters.amenities?.handicap && !spot.handicap) return false;
+
+          return true;
+        });
+
         setParkingSpots(fetchedSpots);
 
         // Clear previous markers and add new ones
@@ -110,7 +128,7 @@ const OlaMapComponent = () => {
       <HeaderNavbar mapInstance={mapInstance}/>
       <div id="map-container" style={{ width: "100%", height: "100vh" }}></div>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <BottomSheet selectedMarker={selectedMarker} />
+      <BottomSheet selectedMarker={selectedMarker}/>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { getFirestore,doc,updateDoc } from "firebase/firestore";
 
 // Function to dynamically load Razorpay SDK script
 const loadRazorpayScript = () => {
@@ -16,7 +17,6 @@ const loadRazorpayScript = () => {
     document.body.appendChild(script);
   });
 };
-
 // Main function to handle payment
 export const handlePayment = async () => {
   const res = await loadRazorpayScript();
@@ -53,4 +53,68 @@ export const handlePayment = async () => {
   const paymentObject = new window.Razorpay(options);
   paymentObject.open();
 };
+
+// import { doc, updateDoc } from "firebase/firestore";
+// import { db } from "../firebasecon";
+// import { useNavigate } from "react-router-dom";
+
+// // Function to dynamically load Razorpay SDK script
+// const loadRazorpayScript = () => {
+//   return new Promise((resolve) => {
+//     const script = document.createElement("script");
+//     script.src = "https://checkout.razorpay.com/v1/checkout.js";
+
+//     script.onload = () => resolve(true);
+//     script.onerror = () => resolve(false);
+
+//     document.body.appendChild(script);
+//   });
+// };
+
+// // Main function to handle payment
+// export const handlePayment = async (slotId, navigate) => {
+//   const res = await loadRazorpayScript();
+
+//   if (!res) {
+//     alert("Razorpay SDK failed to load. Are you online?");
+//     return;
+//   }
+
+//   const options = {
+//     key: "rzp_test_grMytIcY5TuC0o",
+//     amount: 2700,
+//     currency: "INR",
+//     name: "Parking Booking",
+//     description: "Booking Payment for Garage 1",
+//     image: "https://yourdomain.com/logo.png",
+//     handler: async function (response) {
+//       alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
+//       console.log("Payment Success", response);
+
+//       // Update Firestore
+//       try {
+//         await updateDoc(doc(db, "owners", slotId), {
+//           status: "Unavailable",
+//         });
+//         navigate("/home");
+//       } catch (err) {
+//         console.error("Firestore update failed:", err);
+//       }
+//     },
+//     prefill: {
+//       name: "Your Name",
+//       email: "youremail@example.com",
+//       contact: "9999999999",
+//     },
+//     notes: {
+//       address: "Parking Garage Address",
+//     },
+//     theme: {
+//       color: "#0e76a8",
+//     },
+//   };
+
+//   const paymentObject = new window.Razorpay(options);
+//   paymentObject.open();
+// };
 

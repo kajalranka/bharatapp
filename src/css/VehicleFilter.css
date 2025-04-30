@@ -89,7 +89,7 @@
 
 /* Inner Content */
 .sidebar-inner {
-  padding: 1.6rem;
+  padding: 3.5rem;
 }
 
 /* Headings */
@@ -104,7 +104,7 @@
 .sidebar-vehicle-grid {
   display: flex;
   justify-content: space-between;
-  gap: 1rem; /* Added gap between buttons */
+  gap: 0.5rem; /* Added gap between buttons */
   margin-bottom: 2.1rem;
 }
 
@@ -196,4 +196,16 @@
   width: 1.25rem;
   height: 1.25rem;
   accent-color: #4299e1; /* Blue-500 */
+}
+
+.sidebar-search-button {
+  font-size: 20px;
+background-color: #2d3748;
+margin-top:auto;
+color:white;
+padding: 30px;
+width: 300PX;
+border-radius: 10px;
+text-align: center;
+font-weight: bold;
 }

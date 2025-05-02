@@ -109,8 +109,8 @@
 }
 
 .sidebar-vehicle-button {
-  width: 6rem;
-  height: 6rem;
+  width: 5rem;
+  height: 5rem;
   border-radius: 0.5rem;
   border: 2px solid #4a5568; /* Gray-700 */
   overflow: hidden;
@@ -128,8 +128,8 @@
 }
 
 .sidebar-vehicle-image {
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
   object-fit: cover;
 }
 

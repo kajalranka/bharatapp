@@ -52,9 +52,9 @@ export default function VehicleFilter({onSearch}){
             <h2 className="sidebar-heading">Select Vehicle</h2>
             <div className="sidebar-vehicle-grid">
               {[
-                { type: "Car", img: "/car,png" },
-                { type: "Bike", img: "/bike.png" },
-                { type: "Cycle", img: "/cycle.png" },
+                { type: "Car", img: "/sedan.png" },
+                { type: "Bike", img: "/sportbike.png" },
+                { type: "Cycle", img: "/bicycle.png" },
               ].map((vehicle) => (
                 <button
                   key={vehicle.type}

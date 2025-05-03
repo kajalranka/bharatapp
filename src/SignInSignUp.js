@@ -254,6 +254,7 @@ const SignInSignUp = () => {
 export default SignInSignUp;
 
 
+/*-----------------------  FOR OTP ------------------------*/
 
 // import React, { useEffect, useState } from 'react';
 // import { useNavigate } from 'react-router-dom';

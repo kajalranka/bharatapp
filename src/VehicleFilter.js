@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Menu, X, Search } from "lucide-react";
 import "./css/VehicleFilter.css";
-import carImg from "./sedan.png";
-import bikeImg from "./sportbike.png";
+import carImg from "./car.png";
+import bikeImg from "./bike.png";
 import cycleImg from "./bicycle.png";
 
 export default function VehicleFilter({onSearch}){

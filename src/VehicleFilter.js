@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Menu, X, Search } from "lucide-react";
 import "./css/VehicleFilter.css";
+import carImg from "./sedan.png";
+import bikeImg from "./sportbike.png";
+import cycleImg from "./bicycle.png";
 
 export default function VehicleFilter({onSearch}){
   const [isOpen, setIsOpen] = useState(true);
@@ -52,9 +55,9 @@ export default function VehicleFilter({onSearch}){
             <h2 className="sidebar-heading">Select Vehicle</h2>
             <div className="sidebar-vehicle-grid">
               {[
-                { type: "Car", img: "/car,png" },
-                { type: "Bike", img: "/bike.png" },
-                { type: "Cycle", img: "/cycle.png" },
+                { type: "Car", img: carImg },
+                { type: "Bike", img: bikeImg },
+                { type: "Cycle", img: cycleImg },
               ].map((vehicle) => (
                 <button
                   key={vehicle.type}

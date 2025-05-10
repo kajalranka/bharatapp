@@ -1,48 +1,178 @@
-.HeaderNavBar{
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background-color: #ffffff;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    height: 80px;
-    justify-content: space-between;
-    padding: 4px;
-  }
-  .NavBar{
-    display: flex;
-    gap: 16px; 
-    padding: 6px;
-    align-items: center;
-  }
-  svg{
-    transform: translatex(50%);
-    position: absolute;
-    height: 20px;
-    left: 635px;
-  }
-  input{
-    width: 100%;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 25px; /* Adjust the value for desired roundness */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Adds subtle shadow for depth */
-    font-size: 16px;
-    transition: box-shadow 0.3s ease;
-    background-color: rgb(248, 248, 248);
-  }
-  input:focus {
-    outline: none;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Enhanced shadow on focus */
+.HeaderNavBar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  /*background-color: #ffffff;*/
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 80px;
+  /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
+}
+
+.NavBar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1.5px solid #ccc;
+  border-radius: 25px;
+  padding: 6px 12px;
+  width: 30rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 16px;
+  background-color: transparent;
+  border-radius: 25px;
+}
+
+.search-button {
+  background: none;
+  border: none;
+  padding: 4px;
+  box-shadow: none !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+   -webkit-box-shadow: none !important;
+  cursor: pointer;
+}
+
+.search-icon {
+  width: 22px;
+  height: 22px;
+  color: #444;
+  filter: none !important;
+  -webkit-filter: none !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  transition: color 0.3s;
+}
+
+.search-button:hover .search-icon {
+  color: #007bff;
+}
+
+.UserSection {
+  display: flex;
+  align-items: center;
+}
+/*-------------------------------------------FOR LOGOUT BUTTON ----------------------------------------*/
+.logout-button {
+  background-color: #e74c3c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 1rem;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.logout-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.logout-button:focus {
+  outline: 2px solid #c0392b;
+  outline-offset: 2px;
+}
+
+.logout-button svg {
+  width: 18px;
+  height: 18px;
+  stroke: white;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .logout-button {
+    padding: 8px 16px;
+    font-size: 14px;
   }
   
-  .SearchBar{
-    position: relative;
-    padding: 6px;
-    gap: 2px;
-    width: 40%;
-    height: 40%;
-    display: flex;
-    align-items: center;
+  .logout-button svg {
+    width: 16px;
+    height: 16px;
   }
+}
+
+/*---------------------------------------------FOR PARKING BUTTON ---------------------------------------*/
+.Parking-button {
+  background-color: #27ae60;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 1rem;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+  min-width: 180px;
+}
+
+.Parking-button:hover {
+  background-color: #219653;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.Parking-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.Parking-button:focus {
+  outline: 2px solid #219653;
+  outline-offset: 2px;
+}
+
+.Parking-button svg {
+  width: 20px;
+  height: 20px;
+  stroke: white;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .Parking-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .Parking-button svg {
+    width: 18px;
+    height: 18px;
+  }
+}

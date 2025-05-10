@@ -2,74 +2,81 @@
 .bottom-sheet-container {
   position: fixed;
   bottom: 0;
-  left: 0;
-  width: 100%;
+  left: 50%;
+  width: 80%;
+  height: 68vh;
   background: white;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   border-radius: 15px 15px 0 0;
   overflow: hidden;
+  z-index: 999;
 }
+
 
 /* Drag Handle */
 .drag-handle {
-  width: 50px;
-  height: 5px;
-  background: #ccc;
-  border-radius: 10px;
-  margin: 10px auto;
+  width: 60px;
+  height: 6px;
+  background: #ddd;
+  border-radius: 3px;
+  margin: 12px auto;
   cursor: pointer;
 }
 
-/* Content - Image and Details Side by Side */
+/* Content Container */
 .content-container {
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: auto;
+  padding: 20px;
+  gap: 20px;
+  box-sizing: border-box;
 }
 
 /* Image Container - Left */
 .image-container {
-  flex: 1; /* 50% width */
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  padding: 20px;
-  background: #f9f9f9;
+  background: #f2f4f7;
+  padding: 10px;
+  border-radius: 12px;
 }
 
 .image-container img {
   max-width: 100%;
-  max-height: 100%;
-  border-radius: 10px;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 .placeholder-image {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: #888;
+  text-align: center;
+  color: #aaa;
 }
 
 /* Details Container - Right */
 .details-container {
-  flex: 1; /* 50% width */
-  padding: 20px;
+  flex: 2;
   overflow-y: auto;
+  max-height: 300px;
+  padding-right: 10px;
 }
 
 .details-container h1 {
-  font-size: 22px;
+  font-size: 24px;
+  font-weight: 600;
   margin-bottom: 10px;
+  color: #333;
 }
 
 .details-container p {
-  margin: 5px 0;
-  font-size: 16px;
+  font-size: 15px;
+  color: #555;
+  margin: 4px 0;
 }
 
 /* Pricing Section */
@@ -80,42 +87,52 @@
 }
 
 .pricing-list li {
-  font-size: 16px;
-  margin: 3px 0;
+  font-size: 15px;
+  color: #444;
+  margin: 4px 0;
 }
 
-/* ✅ Book Button at the Bottom */
+/* Book Button Container */
 .button-container {
   width: 100%;
-  padding: 10px;
-  text-align: center;
-  border-top: 1px solid #ddd;
+  padding: 15px 20px;
+  background: #fafafa;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: center;
 }
 
 .book-button1 {
-  width: 95%;
-  background-color: #007bff;
+  width: 100%;
+  max-width: 300px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
   color: white;
   border: none;
-  padding: 12px;
-  font-size: 18px;
-  border-radius: 8px;
+  padding: 14px;
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: 10px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
 }
 
 .book-button1:hover {
-  background-color: #0056b3;
+  background: linear-gradient(135deg, #0056b3, #003d80);
+  box-shadow: 0 6px 20px rgba(0, 86, 179, 0.5);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .content-container {
-    flex-direction: column; /* Stack image and details on small screens */
+    flex-direction: column;
   }
 
-  .image-container, .details-container {
-    flex: none;
-    width: 100%;
+  .image-container img {
+    max-height: 150px;
+  }
+
+  .details-container {
+    max-height: 200px;
   }
 }

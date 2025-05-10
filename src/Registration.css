@@ -3,52 +3,88 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full height of the viewport */
-  background: linear-gradient(70deg, #03a7ff, #ffffff); /* Gradient background */
+  min-height: 100vh;
+  background: linear-gradient(70deg, #03a7ff, #ffffff);
+  padding: 20px; /* in case viewport is smaller */
+  box-sizing: border-box;
 }
 
 /* Main container for the form */
 .registration-container {
   display: flex;
+  flex-wrap: wrap;
   width: 850px;
   background: white;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Left Section Styling */
+.left-section, .right-section {
+  width: 50%;
+  padding: 30px;
+  box-sizing: border-box;
+  max-height: 80vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
 .left-section {
-  width: 50%;
   background: white;
-  padding: 30px;
 }
 
-.left-section h2 {
-  color: #03a7ff;
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
-/* Right Section Styling */
 .right-section {
-  width: 50%;
-  background: #03a7ff; /* Keep the original background */
-  padding: 30px;
-  color: white; /* Changed text color to white */
+  background: #03a7ff;
+  color: white;
 }
 
+/* Custom scrollbar styling */
+.left-section::-webkit-scrollbar,
+.right-section::-webkit-scrollbar {
+  width: 6px;
+}
+
+.left-section::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.left-section::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.right-section::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.right-section::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+/* Headings */
+.left-section h2,
 .right-section h2 {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 15px;
-  color: white; /* Ensure headings are white */
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 5px;
 }
 
-/* Input Fields */
-.input-group {
+.right-section h3 {
+  font-size: 18px;
+  font-weight: 500;
   margin-bottom: 15px;
+  color: white;
+}
+
+/* Input Groups */
+.input-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .input-group input,
@@ -56,59 +92,122 @@
   width: 100%;
   border: none;
   border-bottom: 2px solid #ccc;
-  padding: 8px;
+  padding: 10px;
   background: transparent;
   outline: none;
   font-size: 14px;
-  color: rgb(0, 0, 0); /* Default input text color */
+  transition: border-color 0.3s;
+  color: rgb(0, 0, 0);
 }
 
-/* Adjust input color for dark background */
 .right-section .input-group input,
 .right-section .input-group select {
-  color: white; /* Keep input text color white */
+  color: white;
   border-bottom: 2px solid rgba(255, 255, 255, 0.6);
 }
 
-/* File input styling */
-.input-group input[type="file"] {
-  padding: 0; /* Remove padding for file input */
+/* Input focus effect */
+.input-group input:focus,
+.input-group select:focus {
+  border-bottom: 2px solid #03a7ff;
 }
 
 /* Flexbox for side-by-side inputs */
 .flex-container {
   display: flex;
   gap: 15px;
+  flex-wrap: wrap;
 }
 
 .flex-container .input-group {
-  width: 50%;
+  flex: 1;
+  min-width: 45%;
 }
 
-/* Checkbox Styling */
+/* Checkbox group */
 .checkbox-group {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-bottom: 20px;
   font-size: 14px;
-  color: white; /* Ensure checkbox text is white */
+  align-items: center;
 }
 
-.checkbox-group input {
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: inherit;
+}
+
+.checkbox-group input[type="checkbox"] {
   width: 16px;
   height: 16px;
+  accent-color: #fff;
 }
 
-.checkbox-group a {
-  color: #a5d8ff;
-  text-decoration: none;
+/* Vehicle types styling */
+.vehicle-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 25px;
 }
 
-.checkbox-group a:hover {
-  text-decoration: underline;
+/* Pricing section styling */
+.pricing-section {
+  margin-top: 20px;
 }
 
-/* Register Button */
+.vehicle-pricing {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+/* Pricing options styling */
+.pricing-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.pricing-type-label {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: all 0.2s;
+}
+
+.pricing-type-label:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Price inputs styling */
+.price-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.price-input {
+  flex: 1;
+  min-width: 120px;
+}
+
+.price-input input {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  padding: 8px;
+}
+
+/* Buttons */
 #Button1,
 #Button2 {
   width: 100%;
@@ -121,9 +220,45 @@
   border: none;
   border-radius: 25px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background 0.3s ease;
 }
 
 button:hover {
   background: #e0e0e0;
+}
+
+button:disabled {
+  background: rgba(255, 255, 255, 0.5);
+  color: rgba(74, 61, 143, 0.5);
+  cursor: not-allowed;
+}
+
+/* Responsive fix */
+@media (max-width: 768px) {
+  .registration-container {
+    flex-direction: column;
+    width: 100%;
+    max-width: 95%;
+  }
+
+  .left-section, .right-section {
+    width: 100%;
+    max-height: none;
+    overflow-y: visible;
+  }
+  
+  .registration-wrapper {
+    height: auto;
+    padding: 10px;
+  }
+  
+  /* Add some spacing between sections on mobile */
+  .vehicle-pricing {
+    margin-bottom: 15px;
+  }
+  
+  /* Make button text a bit smaller on mobile */
+  #Button1, #Button2 {
+    font-size: 14px;
+  }
 }

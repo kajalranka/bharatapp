@@ -1,0 +1,66 @@
+/* Add these styles to your Signup.css file */
+
+/* OTP Container Styles */
+.otp-container {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .otp-form {
+    position: relative !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Make sure the container is reset for OTP screen */
+  .container.otp-container .forms-container {
+    position: static;
+    width: 100%;
+    height: auto;
+  }
+  
+  .container.otp-container .signin-signup {
+    position: static;
+    width: 100%;
+    transform: none;
+    top: auto;
+    left: auto;
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* Error message styling */
+  .error-message {
+    color: #ff3333;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+    text-align: center;
+    width: 100%;
+  }
+  .logout-button {
+    margin-left: 10px;
+    padding: 6px 12px;
+    border: none;
+    background-color: #ff4d4f;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .logout-button:hover {
+    background-color: #e33e3e;
+  }
+  

@@ -10,11 +10,12 @@ import RegistrationForm from "./RegistrationForm";
 import SignInSignUp from "./SignInSignUp";
 import OtpVerification from "./otp/OtpVerification"; // ✅ Import added
 
+
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<SignInSignUp />} />
         <Route path="/signup" element={<SignInSignUp />} />
         <Route path="/register" element={<RegistrationForm />} />
         <Route path="/home" element={<><HeaderNavbar /><VehicleFilter /><OlaMapComponent /></>} />

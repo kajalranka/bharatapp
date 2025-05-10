@@ -41,8 +41,9 @@ body {
   }
 }
 
+
 .header {
-  font-size: 22px;
+  font-size: 16px;
   font-weight: bold;
   color: #333;
   text-align: center;
@@ -189,17 +190,39 @@ body {
 
 /* Summary */
 .summary {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
   margin: 20px 0;
-  font-size: 16px;
-  font-weight: bold;
 }
 
 .summary-item {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.summary-item.total {
+  grid-column: span 2;
+  background: #fff3cd;
+  border: 1px solid #ffeeba;
+}
+
+.summary-item .header {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.summary-item .amount {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
 }
 
 /* Booking Button */
@@ -287,3 +310,65 @@ body {
   transform: scale(1.2);
 }
 
+
+
+
+/* extra css */
+/* Add these CSS rules to your existing ParkingBooking.css file */
+
+.error-message {
+  color: #ff0000;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.error-input {
+  border: 1px solid #ff0000 !important;
+  background-color: #fff0f0;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-icon {
+  position: absolute;
+  color: #555;
+  z-index: 1;
+}
+
+.input-icon.left {
+  left: 12px;
+}
+
+.input-icon.right {
+  right: 12px;
+}
+
+.input-wrapper input {
+  padding-left: 35px;
+  padding-right: 35px;
+  width: 100%;
+}
+
+.required {
+  color: #ff0000;
+  margin-left: 3px;
+}
+
+/* Adjust flatpickr styling */
+.flatpickr-calendar {
+  box-shadow: 0 3px 13px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+/* Fix calendar positioning */
+.flatpickr-calendar.open {
+  z-index: 1000;
+}

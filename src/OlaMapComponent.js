@@ -1,23 +1,74 @@
 import React, { useEffect, useState } from "react";
-import { db } from "./firebasecon"; // Import Firestore instance
-import { collection, onSnapshot } from "firebase/firestore";
-import useUserLocation from "./CurrentLocationMarker"; // Import the location hook
-import petrolPumpIcon from "./fuel-station.png";
-import evChargingIcon from "./charging-point.png";
+import useUserLocation from "./CurrentLocationMarker";
+import supabase from './supabaseClient';
 import placeholderIcon from "./placeholder.png";
-import userLocationIcon from "./pin-map.png"; // Icon for user location
+import userLocationIcon from "./pin-map.png";
+import availableIcon from './green-marker.png';
 import RouteFinder from "./RouteFinder";
 import BottomSheet from "./BottomSheet";
-import availableIcon from './green-marker.png';
 import HeaderNavbar from "./HeaderNavbar";
-import { handlePayment } from "./Razorpay/PaymentButton";
 
-const OlaMapComponent = ({filters})=> {
-  const { userLocation, error } = useUserLocation(); // Get user location
+const OlaMapComponent = ({ filters }) => {
+  const { userLocation, error } = useUserLocation();
   const [olaMaps, setOlaMaps] = useState(null);
   const [mapInstance, setMapInstance] = useState(null);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [parkingSpots, setParkingSpots] = useState([]);
+
+  const fetchParkingSpots = async () => {
+    try {
+      // Fetch owner data with coordinates
+      const { data: ownerData, error: ownerError } = await supabase
+        .from('owner')
+        .select('*')
+        .not('latitude', 'is', null)
+        .not('longitude', 'is', null);
+      
+      if (ownerError) throw ownerError;
+
+      // Fetch all slot data
+      const { data: slotData, error: slotError } = await supabase
+        .from('owner_slots')
+        .select('*');
+      
+      if (slotError) throw slotError;
+
+      // Merge data and transform into proper structure
+      const mergedData = ownerData.map(owner => {
+        const slots = slotData.filter(slot => slot.owner_id === owner.id);
+        
+        // Organize slots by vehicle type
+        const vehicleData = {
+          bike_cycle: slots.filter(slot => slot.vehicletype === 'Bike/Cycle'),
+          car_auto: slots.filter(slot => slot.vehicletype === 'Car/Auto'),
+          bus_truck: slots.filter(slot => slot.vehicletype === 'Truck/Bus')
+        };
+
+        // Get all unique vehicle types
+        const vehicleTypes = [...new Set(slots.map(slot => slot.vehicletype))];
+
+        // Determine overall status
+        const status = slots.some(slot => slot.status === 'available') ? 'Available' : 'Unavailable';
+
+        return {
+          ...owner,
+          slots,
+          vehicle_types: vehicleTypes,
+          vehicleData,
+          status,
+          // Add these fields for BottomSheet compatibility
+          opening_time: slots[0]?.opening_time || 'Not Available',
+          closing_time: slots[0]?.closing_time || 'Not Available',
+          total_slots: slots.reduce((sum, slot) => sum + (parseInt(slot.total_slots) || 0), 0)
+        };
+      });
+
+      return mergedData;
+    } catch (error) {
+      console.error("Error fetching parking data:", error);
+      return [];
+    }
+  };
 
   useEffect(() => {
     const loadOlaMaps = async () => {
@@ -30,14 +81,13 @@ const OlaMapComponent = ({filters})=> {
       const myMap = olaInstance.init({
         style: "https://api.olamaps.io/tiles/vector/v1/styles/default-light-standard/style.json",
         container: "map-container",
-        center: [72.8777, 19.0760], // Default: Mumbai
+        center: [72.8777, 19.0760],
         zoom: 12,
       });
 
       setOlaMaps(olaInstance);
       setMapInstance(myMap);
 
-      // Function to add markers dynamically
       const addMarker = (coords, icon, type, data = {}) => {
         const markerIcon = document.createElement("div");
         markerIcon.style.width = "35px";
@@ -47,9 +97,13 @@ const OlaMapComponent = ({filters})=> {
         markerIcon.style.backgroundRepeat = "no-repeat";
         markerIcon.style.backgroundPosition = "center";
 
+        const displayName = data.first_name && data.last_name 
+          ? `${data.first_name} ${data.last_name}'s Parking`
+          : data.parking_id || "Parking Space";
+
         const popup = olaInstance
           .addPopup({ offset: [0, -30], anchor: "center" })
-          .setHTML(`<div><strong>${type}</strong><br/>${data.name || "Unnamed"}</div>`);
+          .setHTML(`<div><strong>${type}</strong><br/>${displayName}</div>`);
 
         const marker = olaInstance
           .addMarker({ element: markerIcon, offset: [0, -20], anchor: "center" })
@@ -57,71 +111,109 @@ const OlaMapComponent = ({filters})=> {
           .setPopup(popup)
           .addTo(myMap);
 
-        // Add click event to show route and details
         marker.getElement().addEventListener("click", () => {
-          setSelectedMarker({ coords, data: data || {} }); // Ensure data is an object
+          setSelectedMarker({ 
+            coords, 
+            data: {
+              ...data,
+              // Ensure these fields are available for BottomSheet
+              vehicleType: data.vehicle_types?.join(', ') || '',
+              price: data.slots?.[0]?.price || 'Not Available'
+            } 
+          });
         });
       };
 
-      // If user location is available, add a marker
       if (userLocation) {
         addMarker(userLocation, userLocationIcon, "Your Location");
-        myMap.setCenter(userLocation); // Center map on user location
+        myMap.setCenter(userLocation);
         myMap.setZoom(14);
       }
 
-      // Fetch and update parking spots in real-time from Firestore
-      const unsubscribe = onSnapshot(collection(db, "owners"), (snapshot) => {
-        const fetchedSpots = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-    
-        const filteredSpots = fetchedSpots.filter((spot) => {
+      const spots = await fetchParkingSpots();
+      
+      // Subscribe to real-time changes
+      const ownerSubscription = supabase
+        .channel('public:owner')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'owner' }, 
+          async () => {
+            const updatedSpots = await fetchParkingSpots();
+            handleParkingSpots(updatedSpots);
+          })
+        .subscribe();
+
+      const slotsSubscription = supabase
+        .channel('public:owner_slots')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'owner_slots' }, 
+          async () => {
+            const updatedSpots = await fetchParkingSpots();
+            handleParkingSpots(updatedSpots);
+          })
+        .subscribe();
+
+      const handleParkingSpots = (spots) => {
+        const filteredSpots = spots.filter((spot) => {
           if (!filters) return true;
 
-          if (filters.searchPlace && !spot.location?.toLowerCase().includes(filters.searchPlace.toLowerCase())) return false;
-          if (filters.priceRange && Number(spot.price) > Number(filters.priceRange)) return false;
+          // Address filter
+          if (filters.searchPlace && spot.address && 
+              !spot.address.toLowerCase().includes(filters.searchPlace.toLowerCase())) 
+            return false;
+          
+          // Price filter
+          if (filters.priceRange) {
+            const hasMatchingPrice = spot.slots.some(slot => 
+              parseFloat(slot.price) <= parseFloat(filters.priceRange)
+            );
+            if (!hasMatchingPrice) return false;
+          }
+          
+          // Availability filter
           if (filters.availability && spot.status !== "Available") return false;
-          if (filters.parkingType && filters.parkingType !== "both" && spot.parkingType !== filters.parkingType) return false;
-          if (filters.selectedVehicle && spot.vehicleType !== filters.selectedVehicle) return false;
-          if (filters.timeFilter && spot.timeBasis !== filters.timeFilter) return false;
-          if (filters.amenities?.evCharging && !spot.evCharging) return false;
-          if (filters.amenities?.covered && !spot.covered) return false;
-          if (filters.amenities?.handicap && !spot.handicap) return false;
+          
+          // Vehicle type filter
+          if (filters.selectedVehicle && spot.vehicle_types && 
+              !spot.vehicle_types.includes(filters.selectedVehicle)) 
+            return false;
 
           return true;
         });
 
-        setParkingSpots(fetchedSpots);
+        setParkingSpots(filteredSpots);
 
-        // Clear previous markers and add new ones
-        fetchedSpots.forEach((spot) => {
+        // Clear previous markers
+       // myMap.getMarkers()?.forEach(marker => marker.remove());
+
+        // Add markers for filtered spots
+        filteredSpots.forEach((spot) => {
           if (spot.longitude && spot.latitude) {
-            const icon=spot.status === "Available" ? availableIcon: placeholderIcon;
+            const icon = spot.status === "Available" ? availableIcon : placeholderIcon;
             addMarker(
-              [spot.longitude, spot.latitude], // Ola Maps uses [lng, lat]
+              [parseFloat(spot.longitude), parseFloat(spot.latitude)],
               icon,
               "Parking Space",
               spot
             );
           }
         });
-      });
+      };
 
-      // Cleanup Firestore listener on unmount
-      return () => unsubscribe();
+      handleParkingSpots(spots);
+
+      return () => {
+        ownerSubscription.unsubscribe();
+        slotsSubscription.unsubscribe();
+      };
     };
 
     loadOlaMaps();
-  }, [userLocation]); // Reload when user location changes
+  }, [userLocation, filters]);
 
-  // Fetch and display the route when the user selects a marker
   useEffect(() => {
-    if (selectedMarker) {
+    if (selectedMarker && olaMaps && mapInstance && userLocation) {
       RouteFinder(olaMaps, mapInstance, userLocation, selectedMarker.coords);
     }
-  }, [selectedMarker]);
+  }, [selectedMarker, olaMaps, mapInstance, userLocation]);
 
   return (
     <div>
@@ -134,7 +226,3 @@ const OlaMapComponent = ({filters})=> {
 };
 
 export default OlaMapComponent;
-
-
-
-

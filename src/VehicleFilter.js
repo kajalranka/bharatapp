@@ -1,14 +1,18 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Menu, X, Search } from "lucide-react";
-import "./css/VehicleFilter.css";
+import "./css/VehicleFilter1.css";
 import carImg from "./car.png";
 import bikeImg from "./bike.png";
 import cycleImg from "./bicycle.png";
 
-export default function VehicleFilter({onSearch}){
+console.log(" Using correct VehicleFilter.js");
+
+export default function VehicleFilter(props) {
+  console.log("Props received in VehicleFilter:", props);
+  const { onSearch } = props;
+  
   const [isOpen, setIsOpen] = useState(true);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
-  const [parkingType, setParkingType] = useState("public");
   const [searchPlace, setSearchPlace] = useState("");
   const [priceRange, setPriceRange] = useState("");
   const [maxDistance, setMaxDistance] = useState(0.5);
@@ -20,20 +24,42 @@ export default function VehicleFilter({onSearch}){
   });
   const [timeFilter, setTimeFilter] = useState("hourly");
   
-  const handleSubmit= ()=> {
+  // Debug log props on mount
+  useEffect(() => {
+    console.log("VehicleFilter props:", props);
+    console.log("onSearch prop received:", onSearch);
+  }, [props, onSearch]);
+  
+  // Fixed the handleSubmit function with a fallback for when onSearch is undefined
+  const handleSubmit = (e) => {
+    e && e.preventDefault(); // Prevent default form submission if called from a form event
+    console.log("Search button clicked");
+    
+    // Create the filters object - maintain original property names for compatibility
     const filters = {
-      selectedVehicle,
-      parkingType,
-      searchPlace,
-      priceRange,
+      selectedVehicle, // Keep original name for compatibility
+      searchPlace,     // Keep original name for compatibility
+      priceRange: priceRange ? Number(priceRange) : "",  // Convert to number if it exists
       maxDistance,
-      availability,
+      availability,    // Keep original name for compatibility
       amenities,
       timeFilter,
     };
-    // Pass filters up to the parent or context 
- if (onSearch)
-   onSearch(filters);
+    
+    console.log("Filter object created:", filters);
+    
+    // Log the onSearch prop for debugging
+    console.log("onSearch prop type:", typeof onSearch);
+    
+    // Make sure onSearch exists and is callable
+    if (typeof onSearch === 'function') {
+      console.log("Calling onSearch with filters");
+      onSearch(filters);
+    } else {
+      console.error("onSearch is not a function or is undefined:", onSearch);
+      // You could add a default behavior here if needed
+      // For example: alert("Search functionality is not available in this context");
+    }
   };
   
   return (
@@ -69,18 +95,6 @@ export default function VehicleFilter({onSearch}){
                 </button>
               ))}
             </div>
-
-            {/* Select Parking Type Section */}
-            <h2 className="sidebar-heading">Select Parking Type</h2>
-            <select
-              className="sidebar-select"
-              value={parkingType}
-              onChange={(e) => setParkingType(e.target.value)}
-            >
-              <option value="public">Public Parking</option>
-              <option value="private">Private Parking</option>
-              <option value="both">Both</option>
-            </select>
 
             {/* Search Location Section */}
             <h2 className="sidebar-heading">Specify Place</h2>
@@ -157,16 +171,16 @@ export default function VehicleFilter({onSearch}){
             >
               <option value="hourly">Hourly</option>
               <option value="daily">Daily</option> 
-
               <option value="monthly">Monthly</option> 
             </select>
-<button
-  className="sidebar-search-button"
-   onClick= {handleSubmit}
-  // style={{ marginTop:"0rem",padding: "25px", backgroundColor: "black", color: "white", borderRadius: "5px", width: "100%" }}
-  >
-  Search
-</button>
+
+            <button
+              type="button"
+              className="sidebar-search-button"
+              onClick={handleSubmit}
+            >
+              Search
+            </button>
           </div>
         </div>
       </div>

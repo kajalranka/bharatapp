@@ -1,13 +1,18 @@
-import React, { useState } from "react";
-import VehicleFilter from "./VehicleFilter";
-import OlaMapComponent from "./OlaMapComponent";
+import React, { useState, useCallback } from "react";
+import VehicleFilter from "./VehicleFilter.js";
+import OlaMapComponent from "./OlaMapComponent.js";
 
 const ParkingApp = () => {
-  const [filters, setFilters] = useState(null);
+  const [filters, setFilters] = useState({}); // Initialize as an empty object
 
-  const handleSearch = (searchFilters) => {
+  // Use useCallback to ensure the function reference remains stable
+  const handleSearch = useCallback((searchFilters) => {
+    console.log("Filters received in ParkingApp:", searchFilters);
     setFilters(searchFilters);
-  };
+  }, []);
+
+  console.log("ParkingApp rendering, handleSearch is:", handleSearch);
+  console.log("handleSearch type:", typeof handleSearch);
 
   return (
     <div style={{ display: "flex" }}>

@@ -44,6 +44,23 @@ const SignInSignUp = () => {
     setSignInForm(prev => ({ ...prev, [name]: value }));
   };
 
+  // Format phone number to E.164 format
+  const formatPhoneNumber = (phone) => {
+    // Remove all non-digit characters
+    const cleaned = phone.replace(/\D/g, '');
+    
+    // Add country code if not present
+    if (cleaned.length === 10) {
+      return `+91${cleaned}`; // Assuming US numbers, adjust as needed
+    } else if (cleaned.length === 11 && cleaned.startsWith('1')) {
+      return `+${cleaned}`;
+    } else if (cleaned.startsWith('+')) {
+      return phone;
+    }
+    
+    return `+${cleaned}`;
+  };
+
   // Step 1: Send OTP via Supabase for signup
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -52,22 +69,23 @@ const SignInSignUp = () => {
     setLoading(true);
   
     const { username, email, phone, password } = signUpForm;
-    console.log("Sending OTP to:", phone);
+    const formattedPhone = formatPhoneNumber(phone);
+    console.log("Sending OTP to:", formattedPhone);
   
     try {
       const { error } = await supabase.auth.signInWithOtp({
-        phone,
+        phone: formattedPhone,
       });
   
       if (error) throw error;
   
       console.log("OTP sent successfully for signup");
       // Store information for verification step
-      setPhoneToVerify(phone);
+      setPhoneToVerify(formattedPhone);
       setTempUserData({ 
         username, 
         email, 
-        phone, 
+        phone: formattedPhone, 
         password,
         action: 'signup'
       });
@@ -91,20 +109,21 @@ const SignInSignUp = () => {
     setLoading(true);
 
     const { phone } = signInForm;
-    console.log("Sending sign-in OTP to:", phone);
+    const formattedPhone = formatPhoneNumber(phone);
+    console.log("Sending sign-in OTP to:", formattedPhone);
 
     try {
       const { error } = await supabase.auth.signInWithOtp({
-        phone
+        phone: formattedPhone
       });
       
       if (error) throw error;
       
       console.log("Sign-in OTP sent successfully");
       // Store information for verification step
-      setPhoneToVerify(phone);
+      setPhoneToVerify(formattedPhone);
       setTempUserData({ 
-        phone, 
+        phone: formattedPhone, 
         action: 'signin' 
       });
       
@@ -141,8 +160,7 @@ const SignInSignUp = () => {
       const { error: updateError } = await supabase.auth.updateUser({
         data: { 
           full_name: tempUserData.username,
-          email: tempUserData.email,
-          phone: tempUserData.phone
+          email: tempUserData.email
         }
       });
   
@@ -150,15 +168,7 @@ const SignInSignUp = () => {
         console.warn("Metadata update failed:", updateError.message);
       }
   
-      // Store user data locally
-      localStorage.setItem("user", JSON.stringify({
-        uid: data.user.id,
-        email: tempUserData.email,
-        displayName: tempUserData.username,
-        phone: phoneToVerify,
-      }));
-  
-      alert("Signed up successfully!");
+      console.log("Signed up successfully!");
       navigate('/home');
     } catch (error) {
       console.error("OTP verification error:", error);
@@ -185,16 +195,7 @@ const SignInSignUp = () => {
       if (error) throw error;
       
       console.log("OTP verified for signin:", data);
-  
-      // Store user data in localStorage
-      localStorage.setItem("user", JSON.stringify({
-        uid: data.user.id,
-        email: data.user.email,
-        displayName: data.user.user_metadata?.full_name || '',
-        phone: phoneToVerify,
-      }));
-  
-      alert("Logged in successfully!");
+      console.log("Logged in successfully!");
       navigate('/home');
     } catch (error) {
       console.error("OTP verification error:", error);
@@ -209,6 +210,8 @@ const SignInSignUp = () => {
     console.log("Going back from OTP screen");
     setShowOtpVerification(false);
     setOtp("");
+    setPhoneToVerify("");
+    setTempUserData(null);
     setSignUpError("");
     setSignInError("");
   };
@@ -317,12 +320,7 @@ const SignInSignUp = () => {
             <div className="input-field">
               <i className="fas fa-phone"></i>
               <input 
-                type="tel" 
-                name="phone"
-                placeholder="Phone Number" 
-                value={signInForm.phone} 
-                onChange={handleSignInChange}
-                required 
+                type="tel" name="phone" placeholder="Phone Number" value={signInForm.phone} onChange={handleSignInChange}required 
               />
             </div>
             <div className="input-field">

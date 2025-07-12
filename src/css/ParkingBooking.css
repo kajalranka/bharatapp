@@ -345,6 +345,7 @@ body {
 
 .input-icon.left {
   left: 12px;
+  display: none;
 }
 
 .input-icon.right {

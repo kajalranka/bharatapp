@@ -6,7 +6,7 @@ import "./Registration.css";
 
 const RegistrationForm = () => {
   const navigate = useNavigate();
-  const [parkingId] = useState("PARK-" + Math.floor(100000 + Math.random() * 900000));
+ // const [parkingId] = useState("PARK-" + Math.floor(100000 + Math.random() * 900000));
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -18,12 +18,9 @@ const RegistrationForm = () => {
     phoneNumber: "",
     email: "",
     termsAccepted: false,
-    vehicleTypes: [],
-    // Store pricing for each vehicle type separately
-    bike_cycle: {},
-    car_auto: {},
-    bus_truck: {},
-    numberOfSlots: '',
+    vehicleType: [], // Changed to array to store multiple vehicle types
+    pricingDetails: {}, // Will store pricing details for each vehicle type
+    garageImages: [], // Changed to array to handle multiple images
     openingTime: "",
     closingTime: ""
   });
@@ -31,84 +28,93 @@ const RegistrationForm = () => {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked, files } = e.target;
 
     if (type === "checkbox") {
       if (name === "vehicleTypes") {
-        setFormData((prev) => ({
-          ...prev,
-          vehicleTypes: checked
-            ? [...prev.vehicleTypes, value]
-            : prev.vehicleTypes.filter((v) => v !== value),
-        }));
-      } else if (name.startsWith("pricingType_")) {
-        const [_, vehicleType, priceType] = name.split("_");
-        
-        // Convert vehicle type to the corresponding state field
-        const vehicleField = getVehicleField(vehicleType);
-        
+        // Handle vehicle type selection
         setFormData((prev) => {
-          const updatedVehiclePricing = { ...prev[vehicleField] };
+          const updatedVehicleTypes = checked
+            ? [...prev.vehicleType, value]
+            : prev.vehicleType.filter((v) => v !== value);
+          
+          // Initialize pricing details for the selected vehicle
+          const updatedPricingDetails = { ...prev.pricingDetails };
           
           if (checked) {
-            updatedVehiclePricing[priceType] = "";
+            // Add empty pricing details when selecting a vehicle type
+            updatedPricingDetails[value] = {
+              pricingType: "",
+              price: "",
+              numberOfSlots: ""
+            };
           } else {
-            const { [priceType]: removed, ...rest } = updatedVehiclePricing;
-            return { 
-              ...prev, 
-              [vehicleField]: rest 
+            // Remove pricing details when deselecting a vehicle type
+            const { [value]: removed, ...rest } = updatedPricingDetails;
+            return {
+              ...prev,
+              vehicleType: updatedVehicleTypes,
+              pricingDetails: rest
             };
           }
           
-          return { 
-            ...prev, 
-            [vehicleField]: updatedVehiclePricing 
+          return {
+            ...prev,
+            vehicleType: updatedVehicleTypes,
+            pricingDetails: updatedPricingDetails
           };
         });
-      } else {
+      } else if (name === "termsAccepted") {
         setFormData({ ...formData, [name]: checked });
       }
+    } else if (type === "file") {
+      setFormData({ ...formData, garageImages: Array.from(files) })
     } else {
+      // Handle other input fields
       setFormData({ ...formData, [name]: value });
     }
   };
 
-  // Helper function to convert vehicle type to field name
-  const getVehicleField = (vehicleType) => {
-    switch(vehicleType) {
-      case "Bike/Cycle": return "bike_cycle";
-      case "Car/Auto": return "car_auto";
-      case "Bus/Truck": return "bus_truck";
-      default: return "";
-    }
-  };
-
-  // Helper function to convert field name to vehicle type
-  const getVehicleType = (fieldName) => {
-    switch(fieldName) {
-      case "bike_cycle": return "Bike/Cycle";
-      case "car_auto": return "Car/Auto";
-      case "bus_truck": return "Bus/Truck";
-      default: return "";
-    }
-  };
-
-  const handlePricingChange = (e) => {
-    const { name, value } = e.target;
-    const [vehicleType, priceType] = name.split("_");
-    
-    // Get the corresponding field name for the vehicle type
-    const vehicleField = getVehicleField(vehicleType);
-    
-    if (vehicleField) {
-      setFormData((prev) => ({
-        ...prev,
-        [vehicleField]: {
-          ...prev[vehicleField],
-          [priceType]: value
+  // Handle pricing type selection
+  const handlePricingTypeChange = (vehicleType, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      pricingDetails: {
+        ...prev.pricingDetails,
+        [vehicleType]: {
+          ...prev.pricingDetails[vehicleType],
+          pricingType: value
         }
-      }));
-    }
+      }
+    }));
+  };
+
+  // Handle price input
+  const handlePriceChange = (vehicleType, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      pricingDetails: {
+        ...prev.pricingDetails,
+        [vehicleType]: {
+          ...prev.pricingDetails[vehicleType],
+          price: value
+        }
+      }
+    }));
+  };
+
+  // Handle slots input
+  const handleSlotsChange = (vehicleType, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      pricingDetails: {
+        ...prev.pricingDetails,
+        [vehicleType]: {
+          ...prev.pricingDetails[vehicleType],
+          numberOfSlots: value
+        }
+      }
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -119,14 +125,14 @@ const RegistrationForm = () => {
       return;
     }
 
-    // Check if at least one pricing option is selected for selected vehicle types
-    const hasPricing = formData.vehicleTypes.some(vehicle => {
-      const vehicleField = getVehicleField(vehicle);
-      return Object.keys(formData[vehicleField] || {}).length > 0;
+    // Check if all selected vehicle types have pricing details
+    const hasAllPricingDetails = formData.vehicleType.every(vehicle => {
+      const details = formData.pricingDetails[vehicle];
+      return details && details.pricingType && details.price && details.numberOfSlots;
     });
     
-    if (!hasPricing) {
-      alert("Please select at least one pricing type for your selected vehicles.");
+    if (!hasAllPricingDetails) {
+      alert("Please fill in all pricing details for your selected vehicles.");
       return;
     }
 
@@ -146,24 +152,8 @@ const RegistrationForm = () => {
         return;
       }
 
-      const bikeCyclePricing = formData.vehicleTypes.includes("Bike/Cycle") 
-      ? [formData.bike_cycle]
-      : [];
-    
-    const carAutoPricing = formData.vehicleTypes.includes("Car/Auto") 
-      ? [formData.car_auto]
-      : [];
-    
-    const busTruckPricing = formData.vehicleTypes.includes("Bus/Truck") 
-      ? [formData.bus_truck]
-      : [];
-    
-      console.log("Bike/Cycle pricing:", bikeCyclePricing);
-      console.log("Car/Auto pricing:", carAutoPricing);
-      console.log("Bus/Truck pricing:", busTruckPricing);
-      
       // Prepare data for Supabase with correct field names
-      const supabaseData = {
+      const ownerData = {
         first_name: formData.firstName,
         last_name: formData.lastName,
         street: formData.street,
@@ -173,33 +163,101 @@ const RegistrationForm = () => {
         phone_number: formData.phoneNumber,
         email: formData.email,
         terms_accepted: formData.termsAccepted,
-        vehicle_types: formData.vehicleTypes,
-        
-        // Store each vehicle type pricing in its own separate column
-        bike_cycle: bikeCyclePricing,
-        car_auto: carAutoPricing,
-        bus_truck: busTruckPricing,
-        
-        opening_time: formData.openingTime,
-        closing_time: formData.closingTime,
-        
-        // Additional fields that need to be added to your Supabase table
-        parking_id: parkingId,
+        //parking_id: parkingId,
         latitude: coordinates.lat,
         longitude: coordinates.lng,
-        status: "Available",
         created_at: new Date().toISOString(),
-        total_slots: formData.numberOfSlots,
+        state: formData.state // Add state field if needed
       };
 
-      console.log("Submitting Data to Supabase:", supabaseData);
+      console.log("Submitting Owner Data to Supabase:", ownerData);
 
-      // Store in Supabase - make sure table name matches exactly
-      const { error } = await supabase
-        .from('form_data')
-        .insert([supabaseData]);
+      // Insert owner data into Supabase
+      const { data: ownerResult, error: ownerError } = await supabase
+        .from('owner')
+        .insert([ownerData])
+        .select();
 
-      if (error) throw error;
+      if (ownerError) throw ownerError;
+      console.log("Owner data inserted successfully:", ownerResult);
+      
+      const owner_id = ownerResult[0].id;
+      
+      // Upload garage images
+      // Upload garage images (Multi-image support)
+    const imageUrls = [];
+
+    if (formData.garageImages && formData.garageImages.length > 0) {
+      // Process each image sequentially (avoid rate limits)
+      for (let i = 0; i < formData.garageImages.length; i++) {
+        const file = formData.garageImages[i];
+        if (!file) continue; // Skip if file is undefined
+
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${owner_id}_image_${i + 1}.${fileExt}`; // Unique filename per image
+
+        try {
+          // Upload to Supabase Storage
+          const { error: uploadError } = await supabase.storage
+            .from('garage-images')
+            .upload(fileName, file);
+
+          if (uploadError) {
+            console.error(`Error uploading image ${i + 1}:`, uploadError);
+            continue; // Skip failed uploads (or alert user)
+          }
+
+          // Get public URL
+          const { data: publicUrlData } = await supabase.storage
+            .from('garage-images')
+            .getPublicUrl(fileName);
+
+          if (publicUrlData?.publicUrl) {
+            imageUrls.push(publicUrlData.publicUrl);
+          }
+        } catch (error) {
+          console.error(`Failed to upload image ${i + 1}:`, error);
+        }
+      }
+    }
+
+    console.log("Uploaded Image URLs:", imageUrls); // Debugging
+      
+      // Insert owner_slots data for each vehicle type
+      for (const vehicleType of formData.vehicleType) {
+        const vehicleDetails = formData.pricingDetails[vehicleType];
+        
+        if (!vehicleDetails) continue;
+        
+        const slotData = {
+          owner_id: owner_id,
+          vehicletype: vehicleType,
+          pricing_type: vehicleDetails.pricingType,
+          price: parseFloat(vehicleDetails.price),
+          total_slots: parseInt(vehicleDetails.numberOfSlots),
+          parking_image: imageUrls.length > 0 ? JSON.stringify(imageUrls) : null,
+          opening_time: formData.openingTime,
+          closing_time: formData.closingTime,
+          available_slots: parseInt(vehicleDetails.numberOfSlots),
+          status: "available",
+          created_at: new Date().toISOString(),
+          vehicle_id: formData.vehicleType.indexOf(vehicleType) + 1 // Assigning a sequential ID
+        };
+        
+        console.log(`Inserting slot data for ${vehicleType}:`, slotData);
+        
+        const { data: slotResult, error: slotError } = await supabase
+          .from('owner_slots')
+          .insert([slotData])
+          .select();
+        
+        if (slotError) {
+          console.error(`Error inserting slot data for ${vehicleType}:`, slotError);
+          throw slotError;
+        }
+        
+        console.log(`Slot data for ${vehicleType} inserted successfully:`, slotResult);
+      }
 
       alert("Registration successful!");
       navigate("/home");
@@ -216,10 +274,10 @@ const RegistrationForm = () => {
       <div className="registration-container">
         <div className="left-section">
           <h2>General Information</h2>
-          <div className="input-group">
+          {/*<div className="input-group">
             <label>Parking ID</label>
             <input type="text" name="parkingId" value={parkingId} readOnly />
-          </div>
+          </div>*/}
           <div className="flex-container">
             <div className="input-group">
               <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
@@ -231,24 +289,42 @@ const RegistrationForm = () => {
 
           <h2>Contact Details</h2>
           <div className="input-group">
-            <input type="text" name="street" placeholder="Street-Name & Area Name" value={formData.street} onChange={handleChange} />
+            <input type="text" name="phoneNumber" placeholder="Phone Number" value={formData.phoneNumber} onChange={handleChange} required />
           </div>
+          <div className="input-group">
+            <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
+          </div>
+          <div className="input-group">
+            <input type="number" name="Flat no" placeholder="Flat No" value={formData.flatno} onChange={handleChange} required />
+          </div>
+          <div className="input-group">
+            <input type="number" name="state" placeholder="height of parking(in feet)" value={formData.heightofslot} onChange={handleChange} required/>
+          </div>
+          <div className="input-group">
+            <input type="text" name="buildingName" placeholder="Building-Name & Floor Number" value={formData.buildingName} onChange={handleChange} required/>
+          </div>
+          <div className="input-group">
+            <input type="text" name="street" placeholder="Street-Name & Area Name" value={formData.street} onChange={handleChange} required/>
+          </div>
+          <div className="input-group">
+              <input type="text" name="city" placeholder="City" value={formData.city} onChange={handleChange} required/>
+            </div>
           <div className="flex-container">
             <div className="input-group">
-              <input type="text" name="zipCode" placeholder="Pin Code" value={formData.zipCode} onChange={handleChange} />
+              <input type="text" name="state" placeholder="State" value={formData.state} onChange={handleChange} required/>
             </div>
             <div className="input-group">
-              <input type="text" name="city" placeholder="City" value={formData.city} onChange={handleChange} />
+              <input type="text" name="zipCode" placeholder="Pin Code" value={formData.zipCode} onChange={handleChange} required/>
             </div>
-          </div>
+          </div> 
+          
           <div className="input-group">
-            <input type="text" name="buildingName" placeholder="Building-Name & Floor Number" value={formData.buildingName} onChange={handleChange} />
-          </div>
-          <div className="input-group">
-            <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-          </div>
-          <div className="input-group">
-            <input type="text" name="phoneNumber" placeholder="Phone Number" value={formData.phoneNumber} onChange={handleChange} />
+            <select required>
+              <option>Select Parking Type</option>
+              <option>Private steel Parking</option>
+              <option>Private Open Parking</option>
+              <option>Society Parking</option>
+            </select>
           </div>
         </div>
 
@@ -257,7 +333,14 @@ const RegistrationForm = () => {
           <div className="checkbox-group vehicle-types">
             {["Bike/Cycle", "Car/Auto", "Bus/Truck"].map((type) => (
               <label key={type}>
-                <input type="checkbox" name="vehicleTypes" value={type} onChange={handleChange} checked={formData.vehicleTypes.includes(type)} />
+                <input 
+                  type="checkbox" 
+                  name="vehicleTypes" 
+                  value={type} 
+                  onChange={handleChange} 
+                  checked={formData.vehicleType.includes(type)} 
+                  required
+                />
                 {type}
               </label>
             ))}
@@ -275,64 +358,111 @@ const RegistrationForm = () => {
             </div>
           </div>
 
-          {formData.vehicleTypes.length > 0 && (
+          {formData.vehicleType.length > 0 && (
             <div className="pricing-section">
               <h2>Pricing Options</h2>
               
-              {formData.vehicleTypes.map(vehicleType => {
-                const vehicleField = getVehicleField(vehicleType);
-                return (
-                  <div key={vehicleType} className="vehicle-pricing">
-                    <h3>{vehicleType} Pricing</h3>
-                    
-                    <div className="checkbox-group pricing-types">
-                      {["hourly", "daily", "weekly", "monthly"].map((type) => (
-                        <label key={`${vehicleType}-${type}`} className="pricing-type-label">
-                          <input 
-                            type="checkbox" 
-                            name={`pricingType_${vehicleType}_${type}`} 
-                            onChange={handleChange} 
-                            checked={Object.keys(formData[vehicleField] || {}).includes(type)} 
-                          />
-                          {type.charAt(0).toUpperCase() + type.slice(1)}
-                        </label>
-                      ))}
-                    </div>
-                    
-                    <div className="price-inputs">
-                      {Object.keys(formData[vehicleField] || {}).map((priceType) => (
-                        <div key={`${vehicleType}-${priceType}`} className="input-group price-input">
-                          <label>{priceType.charAt(0).toUpperCase() + priceType.slice(1)} Price</label>
-                          <input 
-                            type="number" 
-                            name={`${vehicleType}_${priceType}`} 
-                            value={formData[vehicleField][priceType]} 
-                            onChange={handlePricingChange} 
-                            min="0" 
-                            required 
-                            placeholder="In Rupees" 
-                          />
-                        </div>
-                      ))}
-                    </div>
+              {formData.vehicleType.map(vehicleType => (
+                <div key={vehicleType} className="vehicle-pricing">
+                  <h3>{vehicleType} Pricing</h3>
+                  
+                  <div className="input-group">
+                    <label>Pricing Type</label>
+                    <select 
+                      value={formData.pricingDetails[vehicleType]?.pricingType || ""}
+                      onChange={(e) => handlePricingTypeChange(vehicleType, e.target.value)}
+                      required
+                    >
+                      <option value="">Select Pricing Type</option>
+                      <option value="Hourly">Hourly</option>
+                      <option value="Daily">Daily</option>
+                      <option value="Weekly">Weekly</option>
+                      <option value="Monthly">Monthly</option>
+                    </select>
                   </div>
-                );
-              })}
+                  
+                  <div className="input-group">
+                    <label>Price (in Rupees)</label>
+                    <input 
+                      type="number" 
+                      value={formData.pricingDetails[vehicleType]?.price || ""} 
+                      onChange={(e) => handlePriceChange(vehicleType, e.target.value)}
+                      min="0" 
+                      placeholder="In Rupees" 
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="input-group">
+                    <label>Number of Slots</label>
+                    <input
+                      type="number"
+                      placeholder="Enter number of slots"
+                      value={formData.pricingDetails[vehicleType]?.numberOfSlots || ""}
+                      onChange={(e) => handleSlotsChange(vehicleType, e.target.value)}
+                      min="1"
+                      required
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-          )}
+          )}   
 
           <div className="input-group">
-            <label>Number of Slots</label>
+            <label>Upload Garage Images</label>
             <input
-              type="number"
-              name="numberOfSlots"
-              placeholder="Enter number of slots"
-              value={formData.numberOfSlots}
+              type="file"
+              accept="image/*"
+              multiple
               onChange={handleChange}
-              min="1"
               required
             />
           </div>
+          <div className="input-group">
+            <label>Upload NOC letter</label>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label>Upload Address Proof</label>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label>Upload Parking Slot Ownership proof </label>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleChange}
+              required
+            />
+          </div>
+          
+          {formData.garageImages.length > 0 && (
+            <div className="image-preview">
+              {formData.garageImages.map((file, index) => (
+                <img 
+                  key={index} 
+                  src={URL.createObjectURL(file)} 
+                  alt={`Preview ${index + 1}`} 
+                  width="100" 
+                  required
+                />
+              ))}
+            </div>
+          )}
 
           <div className="checkbox-group">
             <input type="checkbox" name="termsAccepted" checked={formData.termsAccepted} onChange={handleChange} required />
